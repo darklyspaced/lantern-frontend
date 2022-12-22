@@ -21,6 +21,7 @@ function SignUpPage(){
     const { signup } = useAuth();
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
+    const test = 0;
 
     async function handleSubmit(e){
         e.preventDefault()
