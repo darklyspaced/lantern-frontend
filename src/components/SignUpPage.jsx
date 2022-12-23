@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react';
-import { useAuth } from '../contexts/AuthContext'
-import { Link } from "react-router-dom"
+import { auth } from "../firebase"
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom"
 
 export function ErrorDisplay(props){
     return (
@@ -14,30 +15,44 @@ export function ErrorDisplay(props){
     )
 }
 
+function convertError(code){
+    switch(code) {
+        case "auth/email-already-exists":
+            setError('Email already has an associated account.')
+            break;
+        case "auth/invalid-password":
+            setError('Password must be atleast 6 characters long.')
+            break;
+    }
+}
+
+
 function SignUpPage(){
     const emailRef = useRef();
     const passwordRef = useRef();
     const passwordConfirmationRef = useRef();
-    const { signup } = useAuth();
+    const navigate = useNavigate();
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
-    const test = 0;
 
-    async function handleSubmit(e){
+    function handleSubmit(e){
         e.preventDefault()
 
         if (passwordRef.current.value !== passwordConfirmationRef.current.value){
             return setError('Passwords do not match.');
         }
 
-        try {
-            setError(null);
-            setLoading(true);
-            await signup(emailRef.current.value, passwordRef.current.value);
-        }catch{
-            setError('Failed to create an account. Please try again later.');
-        }
-        setLoading(false);
+        setError(null);
+        setLoading(true);
+
+        createUserWithEmailAndPassword(auth, emailRef.current.value, passwordRef.current.value)
+            .then(() => {
+                setLoading(false);
+                navigate("/dashboard");
+            })
+            .catch((e) => {
+                setError(e.code);
+            })
     }
 
     return(
@@ -66,10 +81,10 @@ function SignUpPage(){
                     {error && <ErrorDisplay error={error} />}
                 </div>
                 <div className= "relative top-[17.5%] flex">
-                    <p className="relative m-auto text-[1.15rem] text-white top-[5%]">Already have an account? <Link to="/login">Log In</Link></p>
+                    <p className="relative m-auto text-[1.15rem] text-white top-[5%]">Already have an account? <Link className="text-blue-500 hover:underline" to="/login">Log In</Link></p>
                 </div>
             </div>
-        </>
+            </>
     );
 }
 
