@@ -15,18 +15,6 @@ export function ErrorDisplay(props){
     )
 }
 
-function convertError(code){
-    switch(code) {
-        case "auth/email-already-exists":
-            setError('Email already has an associated account.')
-            break;
-        case "auth/invalid-password":
-            setError('Password must be atleast 6 characters long.')
-            break;
-    }
-}
-
-
 function SignUpPage(){
     const emailRef = useRef();
     const passwordRef = useRef();
@@ -74,8 +62,8 @@ function SignUpPage(){
                             className="h-12 w-full p-3 border-gray-900 box-border text-[1.05rem] font-normal mt-3 mb-14 text-white bg-[#0D1117] rounded-md"
                             />
                         <input 
-                            type="submit" value="Sign Up" disabled={loading}
-                            className="bg-green-800 text-white mb-8 font-semibold border box-border border-green-700 text-2xl yellow-300 h-12 w-full self-center rounded-md"
+                            type="submit" value="Create" disabled={loading}
+                            className="bg-green-800 hover:bg-green-700 transition linear delay-150 text-white mb-8 font-semibold border box-border border-green-700 text-2xl yellow-300 h-12 w-full self-center rounded-md"
                             />
                     </form>
                     {error && <ErrorDisplay error={error} />}
