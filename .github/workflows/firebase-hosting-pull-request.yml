@@ -12,8 +12,4 @@ jobs:
       - run: |
           cd /Users/rohan/Documents/Macbook/Development/todo-manager/
           yarn build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_TODO_MANAGER_EBFF1 }}'
-          projectId: todo-manager-ebff1
+          firebase deploy
