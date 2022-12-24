@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react';
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase"
+import { onAuthStateChanged } from "firebase/auth"
 const AuthContext = React.createContext()
 
 export function useAuth() {
@@ -8,32 +8,26 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }){
-    const [currentUser, setCurrentUser] = useState();
-    const [loading, setLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState(); //undefined so that we know if its loading
 
-    function login(email, password){
-        signInWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                const user = userCredential.user;
-            })
+    function updateAuthStatus() {
+        ;
     }
 
     useEffect(() => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
+        onAuthStateChanged(auth, (user) => {
             setCurrentUser(user)
-            setLoading(false)
         })
-
-        return unsubscribe //removes the listener once it has been run once 
-    }, [])
+    })
 
     const value = {
         currentUser,
+        updateAuthStatus
     }
 
     return (
         <AuthContext.Provider value={value}>
-            {!loading && children}
+            {children}
         </AuthContext.Provider>
     )
 }

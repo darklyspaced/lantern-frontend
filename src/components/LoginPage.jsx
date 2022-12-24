@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { auth } from "../firebase"
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Link, useNavigate } from 'react-router-dom';
 import { ErrorDisplay } from "./SignUpPage"
@@ -7,7 +8,6 @@ function LoginPage(){
     const emailRef = useRef();
     const passwordRef = useRef();
     const navigate = useNavigate();
-
     const [error, setError] = useState(null)
     const [loading, setLoading] = useState(false)
 
@@ -27,7 +27,6 @@ function LoginPage(){
             })
     }
 
-
     return(
         <div className="bg-[#0D1117] h-full">
             <h1 className="text-center text-gray-100 text-6xl pb-30 relative top-[8%] font-medium">Sign in to Avagarde</h1>
@@ -38,7 +37,7 @@ function LoginPage(){
                         className="h-12 w-full p-3 border-gray-900 box-border text-[1.05rem] font-normal mt-3 mb-10 text-white bg-[#0D1117] rounded-md"
                         />
                     <label htmlFor="passwrd" className="text-[1.7rem] font-semibold">Password</label>
-                    <Link htmlFor="passwrd" className="text-[1rem] font-normal hover:underline text-blue-500 text-right ml-[46%]">Forgot Password?</Link>
+                    <Link htmlFor="passwrd" className="text-[1rem] font-normal hover:underline text-blue-500 text-right float-right">Forgot Password?</Link>
                     <input type="password" id="passwrd" name="password" placeholder="Password" ref={passwordRef}
                         className="h-12 w-full p-3 border-gray-900 box-border text-[1.05rem] font-normal mt-3 mb-14 text-white bg-[#0D1117] rounded-md"
                         />

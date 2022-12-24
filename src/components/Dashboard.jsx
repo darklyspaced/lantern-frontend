@@ -1,6 +1,10 @@
+import { useAuth } from "../contexts/AuthContext"
+
 function Dashboard() {
+    const { currentUser } = useAuth();
     return (
-        <h1>You have logged in</h1>
+        <h1>Dashboard: {JSON.stringify(currentUser)} </h1>
+
     )
 }
 
