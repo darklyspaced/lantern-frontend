@@ -7,7 +7,6 @@ const PrivateRoutes = () => {
     if (currentUser == undefined){
         return null
     }
-
     return (
         currentUser ? <Outlet/> : <Navigate to='/landing'/> //if there is a user, then navigate to child (<Outlet />)
     )
