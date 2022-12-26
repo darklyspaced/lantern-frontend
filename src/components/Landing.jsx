@@ -14,6 +14,7 @@ function Landing(){
                 <img className="image" src="/image5.jpg" draggable="false" />
                 <img className="image" src="/image6.jpg" draggable="false" />
             </div>
+            
             <Helmet>
                 <script type='text/javascript' src='./src/components/coolAnim.js'></script>
             </Helmet>
