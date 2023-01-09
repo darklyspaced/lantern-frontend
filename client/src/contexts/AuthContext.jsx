@@ -10,10 +10,6 @@ export function useAuth() {
 export function AuthProvider({ children }){
     const [currentUser, setCurrentUser] = useState(); //undefined so that we know if its loading
 
-    function updateAuthStatus() {
-        ;
-    }
-
     useEffect(() => {
         onAuthStateChanged(auth, (user) => {
             setCurrentUser(user)
@@ -22,7 +18,6 @@ export function AuthProvider({ children }){
 
     const value = {
         currentUser,
-        updateAuthStatus
     }
 
     return (
