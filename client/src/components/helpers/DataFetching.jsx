@@ -1,17 +1,39 @@
  import React, { useState, useEffect } from 'react';
+ import axios from 'axios';
+ import { XMLParser } from 'fast-xml-parser';
+ const xml = new XMLParser();
 
  export default function DataFetching(){
      const [backendData, setBackendData] = useState([{}]); //empty array at beginning
 
      useEffect(() => {
-         fetch("http://localhost:8000/api").then((res) => {
-                 res.json()
-             }).then((data) => {
-                 setBackendData(data);
-             })
-             .catch((err) => {
-                 console.log("Error:", err);
-             })
+         axios.get("http://localhost:8000/api/firefly/auth_url") // gets the url needed to obtain secret token
+            .then(response => {
+                 axios.get(`${response.data}`) 
+                     .then(response => {
+                         response = xml.parse(response.data)
+
+                         axios.post("http://localhost:8000/api/firefly/auth_secret", JSON.stringify({ secret: response.token.secret}), {
+                             headers: {
+                                 'content-type': 'application/json'
+                             }
+                         })
+                            .then((response) => {
+                                 axios.get("http://localhost:8000/api/firefly/auth_secret")
+                                    .then(response => {
+                                         console.log(response)
+                                     })
+                             })
+                            .catch(error => {
+                                 console.log(error)
+                             })
+                     })
+                     .catch(error => {
+                         if (error.code == "ERR_BAD_REQUEST"){
+                             console.log("Please ensure that you are logged currently logged in to Firefly in this browser.") // change to modal message
+                         }
+                     })
+            })
      }, [])
      return (
         <h1>Test</h1>
