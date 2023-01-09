@@ -1,4 +1,3 @@
-console.log("Script loaded.")
 const track = document.getElementById("image-track")
 let speed = 0;
 let run = false;
@@ -11,7 +10,7 @@ const observer = new IntersectionObserver((entries) => {
         if (entry.isIntersecting) {
             entry.target.classList.remove("invisible");
         } else {
-            entry.target.classList.add("visible", "text-red-900");
+            entry.target.classList.add("visible");
         }
     });
 }, options);
