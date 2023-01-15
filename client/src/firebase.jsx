@@ -15,7 +15,7 @@ const app = initializeApp({
 export const auth = getAuth(app);
 
 (async () => {
-  await setPersistence(auth, browserLocalPersistence);
+    await setPersistence(auth, browserLocalPersistence);
 })();
 
 export default app
