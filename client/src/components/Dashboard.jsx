@@ -2,8 +2,9 @@ import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { Link } from "react-router-dom"
 import { db } from "../firebase"
-import { query, collection, onSnapshot, updateDoc, doc } from "firebase/firestore"
+import { query, collection, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore"
 import TodoItem from "./TodoItem"
+import NewTodo from "./NewTodo"
 
 export function Navbar() {
     return (
@@ -40,10 +41,12 @@ function Dashboard() {
         await updateDoc(doc(db, 'todos', todo.id), {
             completed: !todo.completed
         })
-
     }
 
-    console.log(todos);
+    async function deleteTodo(id) {
+        await deleteDoc(doc(db, 'todos', id));
+    }
+
 
     return (
         <div className="w-full h-full bg-[#0D1117]">
@@ -54,10 +57,12 @@ function Dashboard() {
                         key={index}
                         todo={todo}
                         toggleCompleted={toggleCompleted}
+                        deleteTodo={deleteTodo}
                     />
                 ))}
             </ul>
-        </div>
+            <NewTodo />
+        </div >
     )
 }
 
