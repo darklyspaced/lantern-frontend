@@ -8,7 +8,6 @@ import NewTodo from "./NewTodo"
 
 function Navbar() {
     const { currentUser } = useAuth();
-    console.log(currentUser);
     return (
         <div className="h-[7%] max-h-[100px] w-full text-white bg-[#30363D]">
             <nav className="float-left w-full h-full flex flex-row items-center sticky top-[15px]">
@@ -24,6 +23,14 @@ function Dashboard() {
     const { currentUser } = useAuth();
     const [todos, setTodos] = useState([]);
 
+    function sortDone(a, b) {
+        if (a.completed > b.completed) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+
     // Queries to database and filters to return only tasks that belong to user
     useEffect(() => {
         const q = query(collection(db, 'todos'))
@@ -34,6 +41,8 @@ function Dashboard() {
                     todosArray.push({ ...doc.data(), id: doc.id });
                 }
             });
+            todosArray.sort(sortDone);
+            console.log(todosArray);
             setTodos(todosArray);
         });
         return () => unsubscribe();
