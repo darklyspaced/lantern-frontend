@@ -9,7 +9,7 @@ let url;
 let secret;
 const instance = new Firefly("https://nlcssingapore.fireflycloud.asia");
 
-async function getURL(){
+async function getURL() {
     // Fetch school from code
     await Firefly.getHost("nlcssingapore")
 
@@ -30,7 +30,6 @@ app.post("/api/firefly/auth_secret", (req, res) => {
     const response = req.body // object that contains a .secret property with the secret
     secret = response.secret
     instance.getTasks(secret)
-    console.log(secret)
     if (!response) {
         return res.status(400).send({ status: "failed" })
     }
