@@ -18,15 +18,15 @@ export default function DataFetching() {
                                 'content-type': 'application/json'
                             }
                         })
-                            .then(() => {
-                                axios.get("http://localhost:8000/api/firefly/auth_secret")
-                                    .then(response => {
-                                        console.log(response.data)
-                                    })
-                            })
-                            .catch(error => {
-                                console.log(error)
-                            })
+                        // .then(() => {
+                        //     axios.get("http://localhost:8000/api/firefly/auth_secret")
+                        //         .then(response => {
+                        //             setSecret(response.data);
+                        //         })
+                        // })
+                        // .catch(error => {
+                        //     console.log(error)
+                        // })
                     })
                     .catch(error => {
                         if (error.code == "ERR_BAD_REQUEST") {

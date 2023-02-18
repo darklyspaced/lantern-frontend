@@ -2,23 +2,28 @@ import SignUpPage from "./SignUpPage";
 import LogInPage from "./LoginPage"
 import Dashboard from "./Dashboard"
 import Landing from "./Landing"
-import { AuthProvider } from "../contexts/AuthContext"
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import PrivateRoutes from "./PrivateRoute"
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../contexts/AuthContext"
+import PrivateRoute from "./PrivateRoute"
 
 function App() {
+    const { currentUser } = useAuth();
     return (
         <Router>
-            <AuthProvider>
-                <Routes>
-                    <Route path="*" element={<PrivateRoutes />}> {/**work on adding a default route so that it redirects to here**/}
-                        <Route path="dashboard" element={<Dashboard />} />
-                    </Route>
-                    <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/login" element={<LogInPage />} />
-                    <Route path="/landing" element={<Landing />} />
-                </Routes>
-            </AuthProvider>
+            <Routes>
+                <Route path="/" element={currentUser == undefined ? <Navigate to="/dashboard" replace={true} /> : <Navigate to="/landing" replace={true} />} />
+                <Route path="/signup" element={<SignUpPage />} />
+                <Route path="/login" element={<LogInPage />} />
+                <Route
+                    path="/dashboard"
+                    element={
+                        <PrivateRoute>
+                            <Dashboard />
+                        </PrivateRoute>
+                    }
+                />     <Route path="/landing" element={<Landing />} />
+            </Routes>
         </Router>
     )
 }

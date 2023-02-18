@@ -6,11 +6,13 @@ import { query, collection, onSnapshot, updateDoc, doc, deleteDoc } from "fireba
 import TodoItem from "./TodoItem"
 import NewTodo from "./NewTodo"
 
-export function Navbar() {
+function Navbar() {
+    const { currentUser } = useAuth();
+    console.log(currentUser);
     return (
         <div className="h-[7%] max-h-[100px] w-full text-white bg-[#30363D]">
             <nav className="float-left w-full h-full flex flex-row items-center sticky top-[15px]">
-                <Link to="/landing" className="font-semibold text-3xl ml-[2.5%] mr-[76%] relative ">Avagarde</Link>
+                <Link to={currentUser == null ? "/landing" : "/dashboard"} className="font-semibold text-3xl ml-[2.5%] mr-[76%] relative ">Avagarde</Link>
             </nav>
         </div>
     )
@@ -27,7 +29,7 @@ function Dashboard() {
         const q = query(collection(db, 'todos'))
         const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
             let todosArray = []
-            QuerySnapshot.forEach(doc => { // security risk; filtering should ideally happen server side
+            QuerySnapshot.forEach(doc => { // HACK: security risk; filtering should ideally happen server side
                 if (doc.data().userID == currentUser.uid) {
                     todosArray.push({ ...doc.data(), id: doc.id });
                 }
