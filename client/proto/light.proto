@@ -1,0 +1,19 @@
+syntax = "proto3";
+package light;
+
+service Lantern {
+  rpc GetTasks(Filter) returns (PTasks) {}
+  rpc AddTasks(PTasks) returns (StatusCode) {}
+}
+
+message Filter {
+  string status = 1;
+  string read = 2;
+  string sort_by = 3;
+  string sort_order = 4;
+  string source = 5;
+}
+
+message PTasks { string body = 1; }
+
+message StatusCode { bool success = 1; }
