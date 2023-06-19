@@ -22,14 +22,14 @@ function Navbar() {
     )
 }
 
+
 // One adaptable item in the todo list
-//
 function Dashboard() {
     const currentUser = useAuth();
     const [todos, setTodos] = useState<Todo[]>([]);
 
     function sortDone(a: Todo, b: Todo) {
-        if (a.completed > b.completed) {
+        if (a.is_done > b.is_done) {
             return 1;
         } else {
             return -1;
@@ -49,17 +49,17 @@ function Dashboard() {
                 source: "FF",
                 status: "Todo"
             }
+
             const res = await client.getTasks(filter);
-            console.log(res.response.body);
+            const tasks: Todo[] = JSON.parse(res.response.body);
+            setTodos(tasks);
         }
 
         fetchData().catch(e => console.log(e));
     }, [])
 
     async function toggleCompleted(todo: Todo) {
-        await updateDoc(doc(db, 'todos', todo.id), {
-            completed: !todo.completed
-        })
+        todo.is_done = !todo.is_done
     }
 
     async function deleteTodo(id: string) {
