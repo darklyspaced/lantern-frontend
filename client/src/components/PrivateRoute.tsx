@@ -2,8 +2,8 @@ import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext"
 
-function PrivateRoute({ children }) {
-    const { currentUser } = useAuth();
+function PrivateRoute({ children }: any) {
+    const currentUser = useAuth();
     const [authCheckComplete, setAuthCheckComplete] = useState(false);
 
     useEffect(() => {

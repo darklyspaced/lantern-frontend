@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { FormEvent, useState } from "react"
 import { db } from "../firebase"
 import { useAuth } from "../contexts/AuthContext"
 import { collection, addDoc } from "firebase/firestore"
@@ -6,10 +6,10 @@ import { collection, addDoc } from "firebase/firestore"
 export default function NewTodo() {
     const [greenButton, setGreenButton] = useState(false);
     const [input, setInput] = useState("");
-    const { currentUser } = useAuth();
+    const currentUser = useAuth();
 
-    const handleChange = e => {
-        setInput(e.target.value);
+    const handleChange = (e: FormEvent<HTMLInputElement>) => {
+        setInput(e.currentTarget!.value);
         if (input.length > 1) {
             setGreenButton(true)
         } else {
@@ -18,13 +18,13 @@ export default function NewTodo() {
     }
 
 
-    const handleSubmit = async e => {
-        e.preventDefault(e);
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
         if (greenButton) {
-            await(addDoc(collection(db, 'todos'), {
+            await (addDoc(collection(db, 'todos'), {
                 completed: false,
                 task: `${input}`,
-                userID: currentUser.uid,
+                userID: currentUser!.uid,
             }))
 
         }

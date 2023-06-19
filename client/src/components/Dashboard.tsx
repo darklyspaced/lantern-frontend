@@ -2,12 +2,17 @@ import { useEffect, useState } from "react"
 import { useAuth } from "../contexts/AuthContext"
 import { Link } from "react-router-dom"
 import { db } from "../firebase"
-import { query, collection, onSnapshot, updateDoc, doc, deleteDoc } from "firebase/firestore"
+import { updateDoc, doc, deleteDoc } from "firebase/firestore"
 import TodoItem from "./TodoItem"
+import { Todo } from "./TodoItem"
 import NewTodo from "./NewTodo"
 
+import { GrpcWebFetchTransport } from "@protobuf-ts/grpcweb-transport";
+import { LanternClient } from "../../proto/light.client" // all proto types
+import { Filter } from "../../proto/light"
+
 function Navbar() {
-    const { currentUser } = useAuth();
+    const currentUser = useAuth();
     return (
         <div className="h-[7%] max-h-[100px] w-full text-white bg-[#30363D]">
             <nav className="float-left w-full h-full flex flex-row items-center sticky top-[15px]">
@@ -18,12 +23,12 @@ function Navbar() {
 }
 
 // One adaptable item in the todo list
-
+//
 function Dashboard() {
-    const { currentUser } = useAuth();
-    const [todos, setTodos] = useState([]);
+    const currentUser = useAuth();
+    const [todos, setTodos] = useState<Todo[]>([]);
 
-    function sortDone(a, b) {
+    function sortDone(a: Todo, b: Todo) {
         if (a.completed > b.completed) {
             return 1;
         } else {
@@ -31,30 +36,33 @@ function Dashboard() {
         }
     }
 
-    // Queries to database and filters to return only tasks that belong to user
     useEffect(() => {
-        const q = query(collection(db, 'todos'))
-        const unsubscribe = onSnapshot(q, (QuerySnapshot) => {
-            let todosArray = []
-            QuerySnapshot.forEach(doc => { // HACK: security risk; filtering should ideally happen server side
-                if (doc.data().userID == currentUser.uid) {
-                    todosArray.push({ ...doc.data(), id: doc.id });
-                }
+        const fetchData = async () => {
+            const transport = new GrpcWebFetchTransport({
+                baseUrl: "http://localhost:8080",
             });
-            todosArray.sort(sortDone);
-            console.log(todosArray);
-            setTodos(todosArray);
-        });
-        return () => unsubscribe();
+            const client = new LanternClient(transport);
+            const filter: Filter = {
+                read: "All",
+                sortBy: "DueDate",
+                sortOrder: "Ascending",
+                source: "FF",
+                status: "Todo"
+            }
+            const res = await client.getTasks(filter);
+            console.log(res.response.body);
+        }
+
+        fetchData().catch(e => console.log(e));
     }, [])
 
-    async function toggleCompleted(todo) {
+    async function toggleCompleted(todo: Todo) {
         await updateDoc(doc(db, 'todos', todo.id), {
             completed: !todo.completed
         })
     }
 
-    async function deleteTodo(id) {
+    async function deleteTodo(id: string) {
         await deleteDoc(doc(db, 'todos', id));
     }
 
@@ -78,3 +86,4 @@ function Dashboard() {
 }
 
 export default Dashboard;
+

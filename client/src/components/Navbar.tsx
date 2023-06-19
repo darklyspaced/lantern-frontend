@@ -2,7 +2,7 @@ import { Link } from "react-router-dom"
 import { useAuth } from "../contexts/AuthContext"
 
 export default function Navbar() {
-    const { currentUser } = useAuth();
+    const currentUser = useAuth();
     return (
         <div className="h-[7%] max-h-[100px] w-full text-white">
             <nav className="float-left w-full h-full flex flex-row items-center sticky top-[15px]">
